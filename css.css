@@ -1,5 +1,8 @@
 .square {
-border: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
 }
 
 .container {
@@ -13,6 +16,19 @@ border: 1px solid black;
 body {
     display: flex;
     justify-content: center;
+}
+
+.marking {
+    align-self: flex-start;
+    opacity: 0.5; 
+    font-size: 12px;
+}
+
+.piece {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-self: center;
 }
 
 *{box-sizing: border-box;}
