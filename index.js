@@ -11,8 +11,8 @@ const gameBoard = (function () {
     const pieces = [
         ["T", "H", "B", "Q", "K", "B", "H", "T"], 
         ["P", "P", "P", "P", "P", "P", "P", "P"],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', '']]
 
     
     const half = Math.ceil(board.length / 2);
@@ -40,7 +40,7 @@ const displayController = (function () {
     const container = document.querySelector(".container")
 
     const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-
+    let dragged;
     board.forEach((row, rowIndex) => row.forEach((_, columnIndex) => {
         const square = document.createElement("div")
         
@@ -48,17 +48,34 @@ const displayController = (function () {
         const squareIndex = columns[columnIndex] + (8 - rowIndex);
         square.id = squareIndex
         
-        const piece = document.createElement("div")
-        piece.classList.add("piece")
-        piece.innerHTML = addedPieces[rowIndex][columnIndex]
-        square.appendChild(piece)
-
-        square.addEventListener("click", (e) => console.log(e.target.id))
+        if ( addedPieces[rowIndex][columnIndex] !== "") {
+            const piece = document.createElement("div")
+            piece.id = squareIndex   
+            piece.classList.add("piece")
+            piece.draggable = true
+            piece.innerHTML = addedPieces[rowIndex][columnIndex]
+            square.appendChild(piece)
+       
+            piece.addEventListener("dragstart", (e) => {
+                dragged = e.target
+            })
         
-        const p = document.createElement("p")
-        p.classList.add("marking")
-        p.innerHTML = square.id
-        square.appendChild(p)
+        }
+       
+        square.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            false
+        }) 
+
+        square.addEventListener("drop", (e) => {
+            e.preventDefault();
+            e.target.appendChild(dragged)
+        })
+        
+        const marking = document.createElement("p")
+        marking.classList.add("marking")
+        marking.innerHTML = square.id
+        square.appendChild(marking)
 
         container.appendChild(square)
     })
