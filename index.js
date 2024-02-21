@@ -14,7 +14,7 @@ const  Pieces  = {
     BLACK_KING: '♚'
 }
 
-const board = [
+let board = [
     [Pieces.BLACK_ROOK, Pieces.BLACK_KNIGHT, Pieces.BLACK_BISHOP, Pieces.BLACK_QUEEN, Pieces.BLACK_KING, Pieces.BLACK_BISHOP, Pieces.BLACK_KNIGHT, Pieces.BLACK_ROOK], 
     [Pieces.BLACK_PAWN,Pieces.BLACK_PAWN, Pieces.BLACK_PAWN, Pieces.BLACK_PAWN, Pieces.BLACK_PAWN, Pieces.BLACK_PAWN,Pieces. BLACK_PAWN, Pieces.BLACK_PAWN],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -26,43 +26,34 @@ const board = [
 ]
 
 
-
-const getBoardState = function() {
-    const pieces = document.querySelectorAll(".piece");
-    let updatedBoard = [];
-    pieces.forEach(piece => {board.push(piece.innerText)});
-
-
-    console.log(updatedBoard);
-    return updatedBoard
-}
-
 const displayController = (function() {
 
     const container = document.querySelector(".container")
     const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-
-
+    const rows = ["8", "7", "6", "5", "4", "3", "2", "1" ];
     let dragged;
+
+
+
 
     board.forEach((row, rowIndex) => row.forEach((_, columnIndex)=> {
 
         const square = document.createElement("div")
         
         square.classList.add("square")
-        const squareIndex = columns[columnIndex] + (8 - rowIndex);
+        const squareIndex = columns[columnIndex] + rows[rowIndex];
         square.id = squareIndex
         
-            const piece = document.createElement("div")  
-            piece.classList.add("piece")
-            piece.draggable = true
-            piece.innerHTML = board[rowIndex][columnIndex]
-            square.appendChild(piece)
-       
-            piece.addEventListener("dragstart", (e) => {
-                dragged = e.target
+        const piece = document.createElement("div")  
+        piece.classList.add("piece")
+        piece.draggable = true
+        piece.innerHTML = board[rowIndex][columnIndex]
+        square.appendChild(piece)
+    
+        piece.addEventListener("dragstart", (e) => {
+            dragged = e.target
 
-            })
+        })
         
     
         square.addEventListener("dragover", (e) => {
@@ -71,10 +62,16 @@ const displayController = (function() {
         }) 
 
         square.addEventListener("drop", (e) => {
-            e.preventDefault();
-            
+            e.preventDefault();    
             e.target.appendChild(dragged)
-            board = getBoardState()
+
+            const dropRowIndex = rows.indexOf(square.id.charAt(1))
+            const dropColumnIndex = columns.indexOf(square.id.charAt(0));
+            board[dropRowIndex][dropColumnIndex] = dragged.innerText;
+
+            console.log(dragged.parentElement);
+
+            console.log(board);
         })
         
         const marking = document.createElement("p")
