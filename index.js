@@ -156,7 +156,7 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "pawn":
            return isValidPownMove(prevCol, nextCol, prevRow, nextRow, isWhite);
         case "rook":
-         return isValidRookMove(prevCol, nextCol, prevRow, nextRow); 
+         return isValidRookMove(prevCol, nextCol, prevRow, nextRow, isWhite); 
         case "knight":
       
         case "bishop":
@@ -173,6 +173,11 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
 
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
     const direction = isWhite ? -1 : 1
+
+    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
+        return false;
+    }
+
     if (prevCol === nextCol && board[nextRow][nextCol] === "")  {
         if (nextRow === prevRow + direction) {
             return true;
@@ -192,8 +197,13 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
 };
 
 
-const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
-    if ((prevCol === nextCol || prevRow === nextRow) && board[nextRow][nextCol] === "") {
+const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
+
+    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
+        return false;
+    }
+    
+    if (prevCol === nextCol || prevRow === nextRow) {
         return true;
     } 
     return false;
