@@ -26,8 +26,7 @@ let board = [
 ];
 const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const rows = ["8", "7", "6", "5", "4", "3", "2", "1" ];
-
-
+let validMove = false
 
 
 const displayController = (function() {
@@ -36,12 +35,20 @@ const displayController = (function() {
     let dragged;
 
     function handleDrop(e, square) {
+        gameControl(dragged, square)
+        
         e.preventDefault();
-    
-        if (gameControl(dragged, square)) {
+
+        const attackedPiece = square.querySelector(".piece");
+
+        if (validMove) {
             e.target.appendChild(dragged);
         }
-    
+        
+        if (attackedPiece) {
+         attackedPiece.replaceWith(dragged)
+        }
+        
         console.log(board);
     }
 
@@ -95,15 +102,13 @@ const gameControl = function (dragged, square,) {
     const nextRowIndex = rows.indexOf(square.id.charAt(1));
     const nextColumnIndex = columns.indexOf(square.id.charAt(0));
 
-
     const isWhite = isPieceWhite(dragged.innerText);
     const piceType = getPieceType(dragged.innerText);
-    const validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
+    validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
 
     if (validMove) {
         updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex );
-        return true
-    } return false
+    } 
 } 
 
 
@@ -115,8 +120,8 @@ const isPieceWhite = function (piece) {
         piece === Pieces.WHITE_BISHOP ||
         piece === Pieces.WHITE_QUEEN ||
         piece === Pieces.WHITE_KING
-    );
-};
+        );
+    };
 
 const getPieceType = function (piece) {
     switch (piece) {
@@ -177,16 +182,23 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
        if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction ) {
         return true;
        };
+    }
 
-         return false;
-    };
-     return false;
+
+    if (Math.abs(nextCol- prevCol) === 1 && nextRow === prevRow + direction && board[nextRow][nextCol] !== "") {
+        return true
+    }
+
+    return false
 }
 
 
 //need to some how update the isValidMove wiht theis ifon
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
+    if (board[nextRowIndex][nextColumnIndex] !== "") {
+       const captured = board[nextRowIndex][nextColumnIndex]       
+    }
 //clear the prev space of piece on table 
     board[prevRowIndex][prevColumnIndex] = ""
 //add piece to new space 
