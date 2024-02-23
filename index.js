@@ -40,13 +40,11 @@ const displayController = (function() {
         e.preventDefault();
 
         const attackedPiece = square.querySelector(".piece");
-
         if (validMove) {
             e.target.appendChild(dragged);
-        }
-        
-        if (attackedPiece) {
-         attackedPiece.replaceWith(dragged)
+            if (attackedPiece) {
+                attackedPiece.replaceWith(dragged)
+            }
         }
         
         console.log(board);
@@ -104,6 +102,7 @@ const gameControl = function (dragged, square,) {
 
     const isWhite = isPieceWhite(dragged.innerText);
     const piceType = getPieceType(dragged.innerText);
+
     validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
 
     if (validMove) {
@@ -157,7 +156,7 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "pawn":
            return isValidPownMove(prevCol, nextCol, prevRow, nextRow, isWhite);
         case "rook":
-          
+         return isValidRookMove(prevCol, nextCol, prevRow, nextRow); 
         case "knight":
       
         case "bishop":
@@ -190,15 +189,19 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
     }
 
     return false
-}
+};
 
+
+const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
+    if ((prevCol === nextCol || prevRow === nextRow) && board[nextRow][nextCol] === "") {
+        return true;
+    } 
+    return false;
+};
 
 //need to some how update the isValidMove wiht theis ifon
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
-    if (board[nextRowIndex][nextColumnIndex] !== "") {
-       const captured = board[nextRowIndex][nextColumnIndex]       
-    }
 //clear the prev space of piece on table 
     board[prevRowIndex][prevColumnIndex] = ""
 //add piece to new space 
