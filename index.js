@@ -122,6 +122,7 @@ const isPieceWhite = function (piece) {
         );
     };
 
+
 const getPieceType = function (piece) {
     switch (piece) {
         case Pieces.WHITE_PAWN:
@@ -152,6 +153,9 @@ const getPieceType = function (piece) {
 
 
 const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
+    if (!isSameColor(nextCol,  nextRow, isWhite)) {
+        return false
+    }
     switch (piceType) {
         case "pawn":
            return isValidPownMove(prevCol, nextCol, prevRow, nextRow, isWhite);
@@ -174,10 +178,6 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
     const direction = isWhite ? -1 : 1
 
-    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
-        return false;
-    }
-
     if (prevCol === nextCol && board[nextRow][nextCol] === "")  {
         if (nextRow === prevRow + direction) {
             return true;
@@ -198,16 +198,18 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
 
 
 const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
-
-    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
-        return false;
-    }
     
     if (prevCol === nextCol || prevRow === nextRow) {
         return true;
     } 
     return false;
 };
+
+const isSameColor = function (nextCol,  nextRow, isWhite) {
+    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
+        return false;
+    } return true
+}
 
 //need to some how update the isValidMove wiht theis ifon
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
