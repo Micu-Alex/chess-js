@@ -153,7 +153,7 @@ const getPieceType = function (piece) {
 
 
 const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
-    if (!isSameColor(nextCol,  nextRow, isWhite)) {
+    if (isSameColor(nextCol,  nextRow, isWhite)) {
         return false
     }
     switch (piceType) {
@@ -205,11 +205,13 @@ const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
     return false;
 };
 
+
 const isSameColor = function (nextCol,  nextRow, isWhite) {
     if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
-        return false;
-    } return true
+        return true;
+    } return false
 }
+
 
 //need to some how update the isValidMove wiht theis ifon
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
