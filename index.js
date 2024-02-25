@@ -166,7 +166,7 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "bishop":
            return isValidBishopMove(prevCol, nextCol, prevRow, nextRow)
         case "queen":
-     
+           return isValidQueenMove(prevCol, nextCol, prevRow, nextRow)
         case "king":
 
         default:
@@ -212,14 +212,27 @@ const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
         return true
     } 
     return false
-}
+};
 
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
- if(board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+ if (board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
     return true
  } 
  return false
-}
+};
+
+
+const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
+    if (board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+       return true
+    } 
+    if (prevCol === nextCol || prevRow === nextRow) {
+        return true;
+    } 
+    return false
+};
+
+
 
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
@@ -228,8 +241,6 @@ const isSameColor = function (nextCol,  nextRow, isWhite) {
     } return false
 }
 
-
-//need to some how update the isValidMove wiht theis ifon
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
 //clear the prev space of piece on table 
