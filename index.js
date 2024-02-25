@@ -162,7 +162,7 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "rook":
          return isValidRookMove(prevCol, nextCol, prevRow, nextRow, isWhite); 
         case "knight":
-      
+            return isValidKnightMove(prevCol, nextCol, prevRow, nextRow);
         case "bishop":
       
         case "queen":
@@ -197,14 +197,24 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
 };
 
 
-const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
-    
+const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
     if (prevCol === nextCol || prevRow === nextRow) {
         return true;
     } 
     return false;
 };
 
+
+const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
+    if (Math.abs(nextCol- prevCol) === 1 && (nextRow === prevRow +2 || nextRow === prevRow -2) ) {
+        return true
+    } 
+
+    if (Math.abs(nextRow - prevRow) === 1 & (nextCol === prevCol + 2 || nextCol === prevCol - 2 )) {
+        return true
+    } 
+    return false
+}
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
     if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
