@@ -164,7 +164,7 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "knight":
             return isValidKnightMove(prevCol, nextCol, prevRow, nextRow);
         case "bishop":
-      
+           return isValidBishopMove(prevCol, nextCol, prevRow, nextRow)
         case "queen":
      
         case "king":
@@ -187,8 +187,6 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
         return true;
        };
     }
-
-
     if (Math.abs(nextCol- prevCol) === 1 && nextRow === prevRow + direction && board[nextRow][nextCol] !== "") {
         return true
     }
@@ -216,8 +214,16 @@ const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
     return false
 }
 
+const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
+ if(board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+    return true
+ } 
+ return false
+}
+
+
 const isSameColor = function (nextCol,  nextRow, isWhite) {
-    if (board[nextRow][nextCol] !== "" && isPieceWhite(board[nextRow][nextCol]) === isWhite) {
+    if (isPieceWhite(board[nextRow][nextCol]) === isWhite) {
         return true;
     } return false
 }
