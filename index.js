@@ -215,7 +215,7 @@ const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
 };
 
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
- if (board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+ if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
     return true
  } 
  return false
@@ -223,7 +223,7 @@ const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 
 const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
-    if (board[nextRow][nextCol] === "" && Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+    if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
        return true
     } 
     if (prevCol === nextCol || prevRow === nextRow) {
