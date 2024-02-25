@@ -168,11 +168,11 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "queen":
            return isValidQueenMove(prevCol, nextCol, prevRow, nextRow)
         case "king":
-
+            return isValidKingMove(prevCol, nextCol, prevRow, nextRow)
         default:
             return false;
-    }
-}
+    };
+};
 
 
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
@@ -186,10 +186,10 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
        if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction ) {
         return true;
        };
-    }
+    };
     if (Math.abs(nextCol- prevCol) === 1 && nextRow === prevRow + direction && board[nextRow][nextCol] !== "") {
         return true
-    }
+    };
 
     return false
 };
@@ -198,7 +198,7 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
 const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
     if (prevCol === nextCol || prevRow === nextRow) {
         return true;
-    } 
+    }; 
     return false;
 };
 
@@ -206,18 +206,18 @@ const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
 const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
     if (Math.abs(nextCol- prevCol) === 1 && (nextRow === prevRow +2 || nextRow === prevRow -2) ) {
         return true
-    } 
+    }; 
 
     if (Math.abs(nextRow - prevRow) === 1 & (nextCol === prevCol + 2 || nextCol === prevCol - 2 )) {
         return true
-    } 
+    }; 
     return false
 };
 
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
  if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
     return true
- } 
+ }; 
  return false
 };
 
@@ -225,21 +225,27 @@ const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
 const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
     if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
        return true
-    } 
+    };
     if (prevCol === nextCol || prevRow === nextRow) {
         return true;
-    } 
+    };
     return false
 };
 
-
+const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
+   if (Math.abs(nextRow - prevRow) === 1 && Math.abs(nextCol - prevCol) <= 1 ) {
+        return true
+   };
+   return false
+}
 
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
     if (isPieceWhite(board[nextRow][nextCol]) === isWhite) {
         return true;
-    } return false
-}
+    };
+     return false
+};
 
 const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
