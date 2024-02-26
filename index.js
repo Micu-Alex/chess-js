@@ -153,7 +153,7 @@ const getPieceType = function (piece) {
 
 
 const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
-    if (isSameColor(nextCol,  nextRow, isWhite)) {
+    if (isSameColor(nextCol,  nextRow, isWhite) && board[nextRow][nextCol] !== "") {
         return false
     }
     switch (piceType) {
@@ -241,7 +241,8 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
-    if (isPieceWhite(board[nextRow][nextCol]) === isWhite) {
+    if ( isPieceWhite(board[nextRow][nextCol]) === isWhite ) {
+        console.log(isWhite);
         return true;
     };
      return false
