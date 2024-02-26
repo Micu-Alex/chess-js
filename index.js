@@ -183,7 +183,7 @@ const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
             return true;
         };
 
-       if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction ) {
+       if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction  && board[prevRow + direction][prevCol] === "" && board[nextRow][nextCol] === "") {
         return true;
        };
     };
