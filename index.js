@@ -177,41 +177,63 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
 
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
     const direction = isWhite ? -1 : 1
-
+ 
+    // Moving forward one square
     if (prevCol === nextCol && board[nextRow][nextCol] === "")  {
         if (nextRow === prevRow + direction) {
             return true;
         };
 
-       if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction  && board[prevRow + direction][prevCol] === "" && board[nextRow][nextCol] === "") {
+    // Moving forward two squares from starting position
+    if ((isWhite ? 6 : 1) ===  prevRow && nextRow === prevRow + 2 * direction  && board[prevRow + direction][prevCol] === "" && board[nextRow][nextCol] === "") {
         return true;
        };
     };
+
+    // Capturing diagonally
     if (Math.abs(nextCol- prevCol) === 1 && nextRow === prevRow + direction && board[nextRow][nextCol] !== "") {
-        return true
+        return true;
     };
 
-    return false
+    return false;
 };
 
 
 const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
-    if (prevCol === nextCol || prevRow === nextRow) {
+ // Check if moving vertically (same column)
+    if (prevCol === nextCol) {
+        const step = prevRow < nextRow ? 1 : -1;
+        for (let i = prevRow + step; i !== nextRow; i += step) {
+            if(board[i][prevCol] !== "") {
+                return false;
+            };
+        } ;
         return true;
     }; 
+
+    // Check if moving horizontally (same row)
+    if (prevRow === nextRow) {
+        const step = prevCol < nextCol ? 1 : -1;
+        for (let i = prevCol + step; i !== nextCol; i += step) {
+            if (board[prevRow][i] !== "") {
+                return false;
+            };
+        };
+        return true;
+    };
     return false;
 };
 
 
 const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
     if (Math.abs(nextCol- prevCol) === 1 && (nextRow === prevRow +2 || nextRow === prevRow -2) ) {
-        return true
+        return true;
     }; 
 
     if (Math.abs(nextRow - prevRow) === 1 & (nextCol === prevCol + 2 || nextCol === prevCol - 2 )) {
-        return true
+        return true;
     }; 
-    return false
+    return false;
 };
 
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
@@ -242,7 +264,6 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
     if ( isPieceWhite(board[nextRow][nextCol]) === isWhite ) {
-        console.log(isWhite);
         return true;
     };
      return false
