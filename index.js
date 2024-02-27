@@ -226,32 +226,74 @@ const isValidRookMove = function (prevCol, nextCol, prevRow, nextRow) {
 
 
 const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
+    // Check if the move is L-shaped: vertical L
     if (Math.abs(nextCol- prevCol) === 1 && (nextRow === prevRow +2 || nextRow === prevRow -2) ) {
         return true;
     }; 
 
+    // Check if the move is L-shaped: horizontal L
     if (Math.abs(nextRow - prevRow) === 1 & (nextCol === prevCol + 2 || nextCol === prevCol - 2 )) {
         return true;
     }; 
     return false;
 };
 
+
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
+    // Check if the move is diagonal
  if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
-    return true
+   const rowStep = prevRow < nextRow ? 1 : -1;
+   const colStep = prevCol < nextCol ? 1 : -1;
+ // Iterate over the squares along the diagonal path
+   for (let i = prevRow + rowStep, j = prevCol + colStep; i !== nextRow; i += rowStep, j += colStep) {
+    if (board[i][j] !== "") {
+        return false;
+    };
+   } return true;
  }; 
  return false
 };
 
 
 const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
+    // Check if the move is diagonal
     if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
-       return true
-    };
-    if (prevCol === nextCol || prevRow === nextRow) {
+        const rowStep = prevRow < nextRow ? 1 : -1;
+        const colStep = prevCol < nextCol ? 1 : -1;
+
+      // Iterate over the squares along the diagonal path
+        for (let i = prevRow + rowStep, j = prevCol + colStep; i !== nextRow; i += rowStep, j += colStep) {
+         if (board[i][j] !== "") {
+             return false;
+         };
+        } return true;
+      }; 
+
+    // Check if moving vertically (same column)
+    if (prevCol === nextCol) {
+        const step = prevRow < nextRow ? 1 : -1;
+        for (let i = prevRow + step; i !== nextRow; i += step) {
+            if(board[i][prevCol] !== "") {
+                return false;
+            };
+        } ;
+        return true;
+    }; 
+
+    // Check if moving horizontally (same row)
+    if (prevRow === nextRow) {
+        const step = prevCol < nextCol ? 1 : -1;
+        for (let i = prevCol + step; i !== nextCol; i += step) {
+            if (board[prevRow][i] !== "") {
+                return false;
+            };
+        };
         return true;
     };
-    return false
+    return false;
+
+
+      
 };
 
 const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
@@ -263,6 +305,7 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 
 const isSameColor = function (nextCol,  nextRow, isWhite) {
+     // Check if the move is within one square horizontally or vertically
     if ( isPieceWhite(board[nextRow][nextCol]) === isWhite ) {
         return true;
     };
