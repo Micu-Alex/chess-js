@@ -94,20 +94,28 @@ const displayController = (function() {
 
 const gameControl = function (dragged, square,) {
 
+    
     const prevRowIndex = rows.indexOf(dragged.parentElement.id.charAt(1));
     const prevColumnIndex = columns.indexOf(dragged.parentElement.id.charAt(0));
-
+    
     const nextRowIndex = rows.indexOf(square.id.charAt(1));
     const nextColumnIndex = columns.indexOf(square.id.charAt(0));
-
+    
     const isWhite = isPieceWhite(dragged.innerText);
     const piceType = getPieceType(dragged.innerText);
-
+    
     validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
-
+    
     if (validMove) {
         updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex );
     } 
+    const isWhiteInCheck = isInCheck('white');
+    const isblackInCheck = isInCheck('black');
+
+    
+    console.log('Is White in check?', isWhiteInCheck);
+    console.log('Is Black in check?', isblackInCheck);
+    
 } 
 
 
@@ -240,11 +248,13 @@ const isValidKnightMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 
 const isValidBishopMove = function(prevCol, nextCol, prevRow, nextRow) {
+    
     // Check if the move is diagonal
- if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
+    if (Math.abs(prevRow - nextRow) === Math.abs(prevCol - nextCol)) {
    const rowStep = prevRow < nextRow ? 1 : -1;
    const colStep = prevCol < nextCol ? 1 : -1;
- // Iterate over the squares along the diagonal path
+
+    // Iterate over the squares along the diagonal path
    for (let i = prevRow + rowStep, j = prevCol + colStep; i !== nextRow; i += rowStep, j += colStep) {
     if (board[i][j] !== "") {
         return false;
@@ -304,7 +314,41 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 }
 
 
-const isSameColor = function (nextCol,  nextRow, isWhite) {
+const isInCheck = function (color) {
+    // Find the king's position
+    const kingSymbol = color === 'white' ? Pieces.WHITE_KING : Pieces.BLACK_KING;
+    const kingPosition = findPiecePosition(kingSymbol);
+
+    // Check if any opposing pieces can legally capture the king
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const pieceSymbol = board[i][j];
+           
+            if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
+                return true; // The king is in check
+
+            }
+        }
+    }
+
+    return false; // The king is not in check
+};
+
+
+// Function to find the position of a piece on the board
+const findPiecePosition = function (pieceSymbol) {
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (board[i][j] === pieceSymbol) {
+                return { row: i, column: j };
+            }
+        }
+    }
+    return null; // Piece not found
+};
+
+
+const isSameColor = function(nextCol,  nextRow, isWhite) {
      // Check if the move is within one square horizontally or vertically
     if ( isPieceWhite(board[nextRow][nextCol]) === isWhite ) {
         return true;
@@ -312,7 +356,7 @@ const isSameColor = function (nextCol,  nextRow, isWhite) {
      return false
 };
 
-const updateBoardState = function (dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
+const updateBoardState = function(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
 //clear the prev space of piece on table 
     board[prevRowIndex][prevColumnIndex] = ""
