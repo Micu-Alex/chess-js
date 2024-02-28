@@ -53,7 +53,6 @@ const displayController = (function() {
             
         }
         
-        
         console.log(board);
     }
 
