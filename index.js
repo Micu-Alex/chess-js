@@ -28,7 +28,7 @@ const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const rows = ["8", "7", "6", "5", "4", "3", "2", "1" ];
 let validMove = false;
 let isWhiteTurn = true;
-
+let stillInCheck = false;
 
 
 
@@ -45,14 +45,15 @@ const displayController = (function() {
 
         const attackedPiece = square.querySelector(".piece");
         if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
+            if (stillInCheck) {
+                return
+            }
             e.target.appendChild(dragged);
             changeTurn()
             if (attackedPiece) {
                 attackedPiece.replaceWith(dragged)
             }
-            
         }
-        
         console.log(board);
     }
 
@@ -63,6 +64,12 @@ const displayController = (function() {
         square.classList.add("square");
         const squareIndex = columns[columnIndex] + rows[rowIndex];
         square.id = squareIndex;
+        //add color to square
+        if ((rowIndex + columnIndex) % 2 === 0) {
+            square.classList.add("black-square");
+        } else {
+            square.classList.add("white-square");
+        }
         
         if (board[rowIndex][columnIndex] !== "") {
 
@@ -112,19 +119,33 @@ const gameControl = function (dragged, square,) {
     const nextColumnIndex = columns.indexOf(square.id.charAt(0));
     
     const isWhite = isPieceWhite(dragged.innerText);
-    const piceType = getPieceType(dragged.innerText);
-    
-    
-    validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
+    const pieceType = getPieceType(dragged.innerText);
+
+    const kingColor = !isWhite ? 'white' : 'black';
+    let kingInCheck = false
+
+    validMove = isValidMove(pieceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
     
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
-        updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
-       
-    }
+        stillInCheck = isInCheckAfterMove(prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
+        if (stillInCheck) {
+            return
+        }
+            updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
+             kingInCheck = isInCheck(kingColor);
+           
+             const kingInCheckPosition = findPiecePosition(Pieces.WHITE_KING)
+             const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
+             const kingSquare = document.getElementById(kingSquareId);
+             if (kingInCheck) {
+                 kingSquare.classList.add("red-square")
+                } else {
+                    kingSquare.classList.remove("red-square")
+                }
+        }
 
-    const isWhiteInCheck = isInCheck('white');
-    const isblackInCheck = isInCheck('black');
     
+
 } 
 
 
@@ -169,11 +190,12 @@ const getPieceType = function (piece) {
 }
 
 
-const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
+const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
     if (isSameColor(nextCol,  nextRow, isWhite) && board[nextRow][nextCol] !== "") {
         return false
     }
-    switch (piceType) {
+
+    switch (pieceType) {
         case "pawn":
            return isValidPownMove(prevCol, nextCol, prevRow, nextRow, isWhite);
         case "rook":
@@ -181,15 +203,18 @@ const isValidMove = function (piceType, prevCol, nextCol, prevRow, nextRow, isWh
         case "knight":
             return isValidKnightMove(prevCol, nextCol, prevRow, nextRow);
         case "bishop":
-           return isValidBishopMove(prevCol, nextCol, prevRow, nextRow)
+           return isValidBishopMove(prevCol, nextCol, prevRow, nextRow);
         case "queen":
-           return isValidQueenMove(prevCol, nextCol, prevRow, nextRow)
+           return isValidQueenMove(prevCol, nextCol, prevRow, nextRow);
         case "king":
-            return isValidKingMove(prevCol, nextCol, prevRow, nextRow)
-        default:
-            return false;
+            return isValidKingMove(prevCol, nextCol, prevRow, nextRow);
+        default :
+            return false
     };
+   
 };
+
+
 
 
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
@@ -323,7 +348,22 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 }
 
 
-const isInCheck = function (color) {
+
+const isInCheckAfterMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {   
+    // Make a hypothetical move on a temporary board
+
+    const tempBoard =  board.map(row => row.slice());
+    tempBoard[nextRow][nextCol] = tempBoard[prevRow][prevCol];
+    tempBoard[prevRow][prevCol] = "";
+
+    // Check if the king is in check after the move
+    const kingColor = isWhite ? 'white' : 'black';
+    return isInCheck(kingColor, tempBoard);
+}
+
+
+const isInCheck = function (color, customBoard  ) {
+    const boardToSearch = customBoard || board;
     // Find the king's position
     const kingSymbol = color === 'white' ? Pieces.WHITE_KING : Pieces.BLACK_KING;
     const kingPosition = findPiecePosition(kingSymbol);
@@ -331,7 +371,7 @@ const isInCheck = function (color) {
     // Check if any opposing pieces can legally capture the king
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            const pieceSymbol = board[i][j];
+            const pieceSymbol = boardToSearch[i][j];
            
             if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
                 return true; // The king is in check
@@ -343,12 +383,15 @@ const isInCheck = function (color) {
     return false; // The king is not in check
 };
 
+ 
 
 // Function to find the position of a piece on the board
-const findPiecePosition = function (pieceSymbol) {
+const findPiecePosition = function (pieceSymbol, customBoard) {
+    const boardToSearch = customBoard || board;
+
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            if (board[i][j] === pieceSymbol) {
+            if (boardToSearch[i][j] === pieceSymbol) {
                 return { row: i, column: j };
             }
         }
