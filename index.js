@@ -26,7 +26,10 @@ let board = [
 ];
 const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const rows = ["8", "7", "6", "5", "4", "3", "2", "1" ];
-let validMove = false
+let validMove = false;
+let isWhiteTurn = true;
+
+
 
 
 const displayController = (function() {
@@ -38,14 +41,18 @@ const displayController = (function() {
         gameControl(dragged, square)
         
         e.preventDefault();
+        const isWhite = isPieceWhite(dragged.innerText);
 
         const attackedPiece = square.querySelector(".piece");
-        if (validMove) {
+        if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
             e.target.appendChild(dragged);
+            changeTurn()
             if (attackedPiece) {
                 attackedPiece.replaceWith(dragged)
             }
+            
         }
+        
         
         console.log(board);
     }
@@ -92,8 +99,12 @@ const displayController = (function() {
 })();
 
 
-const gameControl = function (dragged, square,) {
+const changeTurn = function () {
+        isWhiteTurn = !isWhiteTurn; 
+}
 
+
+const gameControl = function (dragged, square,) {
     
     const prevRowIndex = rows.indexOf(dragged.parentElement.id.charAt(1));
     const prevColumnIndex = columns.indexOf(dragged.parentElement.id.charAt(0));
@@ -104,17 +115,16 @@ const gameControl = function (dragged, square,) {
     const isWhite = isPieceWhite(dragged.innerText);
     const piceType = getPieceType(dragged.innerText);
     
+    
     validMove = isValidMove(piceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
     
-    if (validMove) {
-        updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex );
-    } 
+    if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
+        updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
+       
+    }
+
     const isWhiteInCheck = isInCheck('white');
     const isblackInCheck = isInCheck('black');
-
-    
-    console.log('Is White in check?', isWhiteInCheck);
-    console.log('Is Black in check?', isblackInCheck);
     
 } 
 
