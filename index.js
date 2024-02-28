@@ -127,10 +127,15 @@ const gameControl = function (dragged, square,) {
     validMove = isValidMove(pieceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
     
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
-        stillInCheck = isInCheckAfterMove(prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
-        if (stillInCheck) {
-            return
+        if (kingInCheck) {
+            stillInCheck = isInCheckAfterMove(prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
+        
+            if (stillInCheck) {
+                console.log("peins");
+                return
+            }
         }
+
             updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
              kingInCheck = isInCheck(kingColor);
            
@@ -363,19 +368,20 @@ const isInCheckAfterMove = function (prevCol, nextCol, prevRow, nextRow, isWhite
 
 
 const isInCheck = function (color, customBoard  ) {
-    const boardToSearch = customBoard || board;
+    const boardToSearch = customBoard || board
+    console.log(customBoard);
     // Find the king's position
     const kingSymbol = color === 'white' ? Pieces.WHITE_KING : Pieces.BLACK_KING;
-    const kingPosition = findPiecePosition(kingSymbol);
+    const kingPosition = findPiecePosition(kingSymbol, boardToSearch);
 
     // Check if any opposing pieces can legally capture the king
+   
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const pieceSymbol = boardToSearch[i][j];
            
             if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
                 return true; // The king is in check
-
             }
         }
     }
