@@ -129,7 +129,6 @@ const gameControl = function (dragged, square,) {
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
         stillInCheck = isInCheckAfterMove(dragged,prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
 
-        
         if(stillInCheck) {
             console.log("muie micule");
             return;
@@ -139,7 +138,7 @@ const gameControl = function (dragged, square,) {
             kingInCheck = isInCheck(kingColor);
             
            
-             const kingInCheckPosition = findPiecePosition(Pieces.WHITE_KING)
+             const kingInCheckPosition = findPiecePosition(!isWhite ? Pieces.WHITE_KING : Pieces.BLACK_KING )
              const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
              const kingSquare = document.getElementById(kingSquareId);
              if (kingInCheck) {
