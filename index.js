@@ -45,9 +45,9 @@ const displayController = (function() {
 
         const attackedPiece = square.querySelector(".piece");
         if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
-            if (stillInCheck) {
-                return
-            }
+            // if (stillInCheck) {
+            //     return
+            // }
             e.target.appendChild(dragged);
             changeTurn()
             if (attackedPiece) {
@@ -127,25 +127,23 @@ const gameControl = function (dragged, square,) {
     validMove = isValidMove(pieceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite );
     
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
+        stillInCheck = isInCheckAfterMove(dragged,prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
 
-        if (kingInCheck) {
-            stillInCheck = isInCheckAfterMove(prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
         
-            if (stillInCheck) {
-                console.log("peins");
-                return
-            }
+        if(stillInCheck) {
+            console.log("muie micule");
+            return;
         }
-
-        updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex); 
-        kingInCheck = isInCheck(kingColor);
-        console.log("king in cahech", kingInCheck);
-
-             const kingInCheckPosition = findPiecePosition(kingColor === "white" ? Pieces.WHITE_KING : Pieces.BLACK_KING);
+            
+            updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
+            kingInCheck = isInCheck(kingColor);
+            
+           
+             const kingInCheckPosition = findPiecePosition(Pieces.WHITE_KING)
              const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
              const kingSquare = document.getElementById(kingSquareId);
              if (kingInCheck) {
-                    kingSquare.classList.add("red-square")
+                 kingSquare.classList.add("red-square")
                 } else {
                     kingSquare.classList.remove("red-square")
                 }
@@ -217,8 +215,6 @@ const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextRow, isW
     };
    
 };
-
-
 
 
 const isValidPownMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {
@@ -338,10 +334,7 @@ const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
         };
         return true;
     };
-    return false;
-
-
-      
+    return false;     
 };
 
 const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
@@ -353,13 +346,13 @@ const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
 
 
 
-const isInCheckAfterMove = function (prevCol, nextCol, prevRow, nextRow, isWhite) {   
+const isInCheckAfterMove = function (dragged, prevCol, nextCol, prevRow, nextRow, isWhite) {   
     // Make a hypothetical move on a temporary board
 
     const tempBoard =  board.map(row => row.slice());
-    tempBoard[nextRow][nextCol] = tempBoard[prevRow][prevCol];
+    tempBoard[nextRow][nextCol] = dragged.innerText;
     tempBoard[prevRow][prevCol] = "";
-
+ ;
     // Check if the king is in check after the move
     const kingColor = isWhite ? 'white' : 'black';
     return isInCheck(kingColor, tempBoard);
@@ -368,7 +361,6 @@ const isInCheckAfterMove = function (prevCol, nextCol, prevRow, nextRow, isWhite
 
 const isInCheck = function (color, customBoard  ) {
     const boardToSearch = customBoard || board
-    console.log(customBoard);
     // Find the king's position
     const kingSymbol = color === 'white' ? Pieces.WHITE_KING : Pieces.BLACK_KING;
     const kingPosition = findPiecePosition(kingSymbol, boardToSearch);
@@ -378,11 +370,11 @@ const isInCheck = function (color, customBoard  ) {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const pieceSymbol = boardToSearch[i][j];
-           
-            if (pieceSymbol) {
-                if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
-                    return true; // The king is in check
-                }
+            if (pieceSymbol !== "" && isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
+                if (customBoard) {
+                    console.log("magic board" ,customBoard);
+                 } 
+                return true; // The king is in check
             }
         }
     }
@@ -421,4 +413,5 @@ const updateBoardState = function(dragged, prevRowIndex, prevColumnIndex, nextRo
     board[prevRowIndex][prevColumnIndex] = ""
 //add piece to new space 
     board[nextRowIndex][nextColumnIndex] = dragged.innerText;
-};
+}; 
+
