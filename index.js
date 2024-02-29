@@ -379,9 +379,10 @@ const isInCheck = function (color, customBoard  ) {
         for (let j = 0; j < 8; j++) {
             const pieceSymbol = boardToSearch[i][j];
            
-            
-            if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
-                return true; // The king is in check
+            if (pieceSymbol) {
+                if (isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
+                    return true; // The king is in check
+                }
             }
         }
     }
