@@ -1,6 +1,7 @@
 import { board, columns, rows } from "./constants.js";
 import gameControl from "./gameControl.js";
 
+
 const displayController = (function() {
     const container = document.querySelector(".container")
     let dragged;

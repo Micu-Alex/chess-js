@@ -2,6 +2,7 @@ import { Pieces, columns, rows, getValidMove, setValidMove, getIsWhiteTurn, setK
 import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn, isInCheck, findPiecePosition, isInCheckAfterMove, updateBoardDisplay } from "./utils.js";
 
 
+
 const gameControl = function (dragged, square, event) {
     
     // Getting the row and column indices of the previous square where the piece was located
