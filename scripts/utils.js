@@ -3,6 +3,8 @@ import { board } from "./constants.js";
 import { isValidPownMove, isValidRookMove, isValidKnightMove, isValidBishopMove, isValidQueenMove, isValidKingMove } from "./moveValidation.js";
 import { setIsWhiteTurn, getIsWhiteTurn } from "./constants.js";
 
+
+// Function to check if a given piece is white
 export const isPieceWhite = function (piece) {
     return (
         piece === Pieces.WHITE_PAWN ||
@@ -14,7 +16,7 @@ export const isPieceWhite = function (piece) {
         );
     };
 
-    
+// Function to get the type of a piece based on its symbol
 export const getPieceType = function (piece) {
     switch (piece) {
         case Pieces.WHITE_PAWN:
@@ -43,17 +45,19 @@ export const getPieceType = function (piece) {
     }
 }
 
-
+// Function to validate a move based on piece type and current and destination positions
 export const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
 
+    // Helper function to check if the next position has a piece of the same color
     const isSameColor = function(nextCol,  nextRow, isWhite) {
        return isPieceWhite(board[nextRow][nextCol]) === isWhite 
     };
 
     if (isSameColor(nextCol,  nextRow, isWhite) && board[nextRow][nextCol] !== "") {
-        return false
+        return false // Invalid move if destination has a piece of the same color
     }
 
+    // Check validity based on piece type
     switch (pieceType) {
         case "pawn":
            return isValidPownMove(prevCol, nextCol, prevRow, nextRow, isWhite);
@@ -72,16 +76,16 @@ export const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextR
     };
 };
 
-
+// Function to update the board state after a move
 export const updateBoardState = function(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
-
-    //clear the prev space of piece on table 
+    // Clear the prev space of piece on table 
         board[prevRowIndex][prevColumnIndex] = ""
-    //add piece to new space 
+    // Add piece to new space 
         board[nextRowIndex][nextColumnIndex] = dragged.innerText;
     }; 
 
 
+// Function to update the board display after a move
 export const updateBoardDisplay = function(event, square, dragged) {
 
     const attackedPiece = square.querySelector(".piece");
@@ -92,6 +96,7 @@ export const updateBoardDisplay = function(event, square, dragged) {
     }
 }
 
+// Function to check if the king of a given color is in check
 export const isInCheck = function (color, customBoard  ) {
     const boardToSearch = customBoard || board
     // Find the king's position
@@ -99,7 +104,6 @@ export const isInCheck = function (color, customBoard  ) {
     const kingPosition = findPiecePosition(kingSymbol, boardToSearch);
 
     // Check if any opposing pieces can legally capture the king
-   
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const pieceSymbol = boardToSearch[i][j];
@@ -129,15 +133,15 @@ export const findPiecePosition = function (pieceSymbol, customBoard) {
     return null; // Piece not found
 };
 
-
+// Function to change the turn from white to black and vice versa
 export const changeTurn = function () {
     const isWhiteTurn = getIsWhiteTurn()
     setIsWhiteTurn(!isWhiteTurn) ; 
 }
 
+// Function to check if the king is in check after a hypothetical move
 export const isInCheckAfterMove = function (dragged, prevCol, nextCol, prevRow, nextRow, isWhite) {   
     // Make a hypothetical move on a temporary board
-
     const tempBoard =  board.map(row => row.slice());
     tempBoard[nextRow][nextCol] = dragged.innerText;
     tempBoard[prevRow][prevCol] = "";
