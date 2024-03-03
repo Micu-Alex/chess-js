@@ -45,20 +45,18 @@ const gameControl = function (dragged, square, event) {
             return;
         }
         
-        // Changing the player's turn
-        changeTurn();
-
-
+        
+        
         // Updating the board state and displaying the changes on the board
         updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
         updateBoardDisplay(event, square, dragged)
-
-
+        
+        
         // Setting and retrieving the king's check status after the move
         setKingInCheck(isInCheck(kingColor));
         const kingInCheck = getKingInCheck();
         
-
+        
         // Finding the position of the king and updating its display on the board
         const kingInCheckPosition = findPiecePosition(!isWhite ? Pieces.WHITE_KING : Pieces.BLACK_KING);
         const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
@@ -68,6 +66,9 @@ const gameControl = function (dragged, square, event) {
         } else {
             kingSquare.classList.remove("red-square");
         }
+        
+        // Changing the player's turn
+        changeTurn();
     }
 } 
 
