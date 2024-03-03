@@ -119,7 +119,7 @@ export const isValidQueenMove = function(prevCol, nextCol, prevRow, nextRow) {
 };
 
 export const isValidKingMove = function(prevCol, nextCol, prevRow, nextRow) {
-    if (Math.abs(nextRow - prevRow) === 1 && Math.abs(nextCol - prevCol) <= 1 ) {
+    if (Math.abs(nextRow - prevRow) <= 1 && Math.abs(nextCol - prevCol) <= 1 ) {
          return true
     };
     return false

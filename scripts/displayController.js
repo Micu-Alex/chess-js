@@ -1,33 +1,14 @@
-import { board, columns, rows, getValidMove, getIsWhiteTurn } from "./constants.js";
-import { isPieceWhite } from "./utils.js"
+import { board, columns, rows } from "./constants.js";
 import gameControl from "./gameControl.js";
 
 const displayController = function() {
     const container = document.querySelector(".container")
        let dragged;
     
-    function handleDrop(e, square) {
+    function handleDrop(event, square) {
+        gameControl(dragged, square, event);
+        event.preventDefault();
         
-        const isWhiteTurn = getIsWhiteTurn();
-        gameControl(dragged, square);
-
-        const validMove = getValidMove();
-
-        e.preventDefault();
-
-        const isWhite = isPieceWhite(dragged.innerText);
-        
-        
-        const attackedPiece = square.querySelector(".piece");
-        if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
-            // if (stillInCheck) {
-            //     return
-            // }
-            e.target.appendChild(dragged);
-            if (attackedPiece) {
-                attackedPiece.replaceWith(dragged)
-            }
-        }
         console.log(board);
     }
     
@@ -54,20 +35,20 @@ const displayController = function() {
             piece.innerHTML = board[rowIndex][columnIndex];
             square.appendChild(piece);
         
-            piece.addEventListener("dragstart", (e) => {
-                dragged = e.target;
+            piece.addEventListener("dragstart", (event) => {
+                dragged = event.target;
     
             });
         };
         
     
-        square.addEventListener("dragover", (e) => {
-            e.preventDefault();
+        square.addEventListener("dragover", (event) => {
+            event.preventDefault();
             false;
         });
 
-        square.addEventListener("drop", (e) => {
-            handleDrop(e, square);
+        square.addEventListener("drop", (event) => {
+            handleDrop(event, square);
         });
         
         const marking = document.createElement("p");

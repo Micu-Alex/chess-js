@@ -1,8 +1,8 @@
 import { Pieces, columns, rows, getValidMove, setValidMove, getIsWhiteTurn, setKingInCheck, getKingInCheck  } from "./constants.js";
-import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn, isInCheck, findPiecePosition, isInCheckAfterMove } from "./utils.js";
+import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn, isInCheck, findPiecePosition, isInCheckAfterMove, updateBoardDisplay } from "./utils.js";
 
 
-const gameControl = function (dragged, square,) {
+const gameControl = function (dragged, square, event) {
     
     const prevRowIndex = rows.indexOf(dragged.parentElement.id.charAt(1));
     const prevColumnIndex = columns.indexOf(dragged.parentElement.id.charAt(0));
@@ -21,13 +21,14 @@ const gameControl = function (dragged, square,) {
   
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
         changeTurn();
-        const stillInCheck = isInCheckAfterMove(dragged,prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
+        const stillInCheck = isInCheckAfterMove(dragged, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
 
         if(stillInCheck) {
             console.log("muie micule");
             return;
         }
             updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
+            updateBoardDisplay(event, square, dragged)
 
             setKingInCheck(isInCheck(kingColor));
 
@@ -36,7 +37,6 @@ const gameControl = function (dragged, square,) {
             const kingInCheckPosition = findPiecePosition(!isWhite ? Pieces.WHITE_KING : Pieces.BLACK_KING);
             const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
             const kingSquare = document.getElementById(kingSquareId);
-            console.log(kingInCheck, kingColor);
             if (kingInCheck) {
                 kingSquare.classList.add("red-square");
             } else {

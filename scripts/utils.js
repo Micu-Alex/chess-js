@@ -14,6 +14,7 @@ export const isPieceWhite = function (piece) {
         );
     };
 
+    
 export const getPieceType = function (piece) {
     switch (piece) {
         case Pieces.WHITE_PAWN:
@@ -41,6 +42,7 @@ export const getPieceType = function (piece) {
             return "king"
     }
 }
+
 
 export const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextRow, isWhite)  {
 
@@ -70,6 +72,7 @@ export const isValidMove = function (pieceType, prevCol, nextCol, prevRow, nextR
     };
 };
 
+
 export const updateBoardState = function(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex) {
 
     //clear the prev space of piece on table 
@@ -78,6 +81,16 @@ export const updateBoardState = function(dragged, prevRowIndex, prevColumnIndex,
         board[nextRowIndex][nextColumnIndex] = dragged.innerText;
     }; 
 
+
+export const updateBoardDisplay = function(event, square, dragged) {
+
+    const attackedPiece = square.querySelector(".piece");
+    
+    event.target.appendChild(dragged);
+    if (attackedPiece) {
+        attackedPiece.replaceWith(dragged)
+    }
+}
 
 export const isInCheck = function (color, customBoard  ) {
     const boardToSearch = customBoard || board
