@@ -4,7 +4,7 @@ import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn,
 
 
 const gameControl = function (dragged, square, event) {
-    
+     
 
     // Getting the row and column indices of the previous square where the piece was located
     const prevRowIndex = rows.indexOf(dragged.parentElement.id.charAt(1));
@@ -33,7 +33,7 @@ const gameControl = function (dragged, square, event) {
 
     // Checking if the move is valid and it's the correct player's turn
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
-        
+
 
         // Checking if the move puts the player's own king in check
         const stillInCheck = isInCheckAfterMove(dragged, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
@@ -67,8 +67,8 @@ const gameControl = function (dragged, square, event) {
             kingSquare.classList.remove("red-square");
         }
         
-        // Changing the player's turn
-        changeTurn();
+     // Changing the player's turn
+     changeTurn();
     }
 } 
 

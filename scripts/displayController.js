@@ -1,16 +1,25 @@
 import { board, columns, rows } from "./constants.js";
 import gameControl from "./gameControl.js";
+import {getIsWhiteTurn} from "./constants.js"
 
 
 const displayController = (function() {
+
     const container = document.querySelector(".container")
+    const turnDisplay = document.querySelector(".turnDisplay")
     let dragged;
+    turnDisplay.textContent = `Is white turn.`
     
     // Function to handle the drop event
     function handleDrop(event, square) {
         gameControl(dragged, square, event);
         event.preventDefault();
-        
+        const isWhiteTurn = getIsWhiteTurn()
+
+        const player = isWhiteTurn ? "white" : "black"
+
+        turnDisplay.textContent = `Is ${player} turn.`
+
         console.log(board);
     }
     
