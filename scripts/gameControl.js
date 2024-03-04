@@ -3,7 +3,6 @@ import { getValidMove, setValidMove, getIsWhiteTurn, setKingInCheck, getKingInCh
 import {
     isPieceWhite,
     getPieceType,
-    isValidMove,
     updateBoardState,
     changeTurn,
     isInCheck,
@@ -32,8 +31,9 @@ const gameControl = function (dragged, square, event) {
     const pieceType = getPieceType(dragged.innerText);
     
 
-     // Getting all available moves for the dragged piece
-     const availableMoves = getAllAvailableMoves(pieceType, prevColumnIndex, prevRowIndex, isWhite);
+    // Getting all available moves for the dragged piece
+    const availableMoves = getAllAvailableMoves(pieceType, prevColumnIndex, prevRowIndex, isWhite);
+     
 
     // Setting and retrieving the validity of the move based on the piece type and move coordinates
     setValidMove(availableMoves.some(move => move.col === nextColumnIndex && move.row === nextRowIndex));

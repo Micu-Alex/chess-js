@@ -143,7 +143,7 @@ export const changeTurn = function () {
     setIsWhiteTurn(!isWhiteTurn) ; 
 }
 
-
+// Function to get all available moves for a given piece at a specific position
 export const getAllAvailableMoves = function (pieceType, col, row, isWhite) {
     const availableMoves = [];
 
