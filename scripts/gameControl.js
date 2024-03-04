@@ -1,4 +1,5 @@
-import { Pieces, columns, rows, getValidMove, setValidMove, getIsWhiteTurn, setKingInCheck, getKingInCheck  } from "./constants.js";
+import { Pieces, columns, rows  } from "./constants.js";
+import { getValidMove, setValidMove, getIsWhiteTurn, setKingInCheck, getKingInCheck } from "./gameData.js";
 import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn, isInCheck, findPiecePosition, isInCheckAfterMove, updateBoardDisplay } from "./utils.js";
 
 
@@ -53,7 +54,8 @@ const gameControl = function (dragged, square, event) {
         
         
         // Setting and retrieving the king's check status after the move
-        setKingInCheck(isInCheck(kingColor));
+        const inCheck = isInCheck(kingColor)
+        setKingInCheck(inCheck);
         const kingInCheck = getKingInCheck();
         
         

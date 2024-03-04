@@ -1,7 +1,7 @@
 import { Pieces } from "./constants.js";
 import { board } from "./constants.js";
 import { isValidPownMove, isValidRookMove, isValidKnightMove, isValidBishopMove, isValidQueenMove, isValidKingMove } from "./moveValidation.js";
-import { setIsWhiteTurn, getIsWhiteTurn } from "./constants.js";
+import { setIsWhiteTurn, getIsWhiteTurn } from "./gameData.js";
 
 
 // Function to check if a given piece is white

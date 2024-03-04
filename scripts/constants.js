@@ -32,19 +32,5 @@ export const board = [
  export const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
  export const rows = ["8", "7", "6", "5", "4", "3", "2", "1" ];
 
-// Storing game-related data in an object
-const gameData = {
-    validMove: false,
-    isWhiteTurn: true,
-    kingInCheck: false,
-};
 
-// Getter and setter functions for game data
-export const getValidMove = () => gameData.validMove;
-export const setValidMove = (value) => gameData.validMove = value;
 
-export const getIsWhiteTurn = () => gameData.isWhiteTurn;
-export const setIsWhiteTurn = (value) => gameData.isWhiteTurn = value;
-
-export const getKingInCheck = () => gameData.kingInCheck;
-export const setKingInCheck = (value) => gameData.kingInCheck = value;

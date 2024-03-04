@@ -1,6 +1,6 @@
 import { board, columns, rows } from "./constants.js";
 import gameControl from "./gameControl.js";
-import {getIsWhiteTurn} from "./constants.js"
+import {getIsWhiteTurn} from "./gameData.js"
 
 
 const displayController = (function() {
