@@ -1,6 +1,16 @@
 import { Pieces, columns, rows  } from "./constants.js";
 import { getValidMove, setValidMove, getIsWhiteTurn, setKingInCheck, getKingInCheck } from "./gameData.js";
-import { isPieceWhite, getPieceType, isValidMove, updateBoardState,  changeTurn, isInCheck, findPiecePosition, isInCheckAfterMove, updateBoardDisplay } from "./utils.js";
+import {
+    isPieceWhite,
+    getPieceType,
+    isValidMove,
+    updateBoardState,
+    changeTurn,
+    isInCheck,
+    findPiecePosition,
+    updateBoardDisplay,
+    getAllAvailableMoves
+ } from "./utils.js";
 
 
 
@@ -22,8 +32,11 @@ const gameControl = function (dragged, square, event) {
     const pieceType = getPieceType(dragged.innerText);
     
 
+     // Getting all available moves for the dragged piece
+     const availableMoves = getAllAvailableMoves(pieceType, prevColumnIndex, prevRowIndex, isWhite);
+
     // Setting and retrieving the validity of the move based on the piece type and move coordinates
-    setValidMove(isValidMove(pieceType, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite ));
+    setValidMove(availableMoves.some(move => move.col === nextColumnIndex && move.row === nextRowIndex));
     const validMove = getValidMove();
 
 
@@ -35,30 +48,17 @@ const gameControl = function (dragged, square, event) {
     // Checking if the move is valid and it's the correct player's turn
     if (validMove && ((isWhite && isWhiteTurn) || (!isWhite && !isWhiteTurn))) {
 
-
-        // Checking if the move puts the player's own king in check
-        const stillInCheck = isInCheckAfterMove(dragged, prevColumnIndex, nextColumnIndex, prevRowIndex, nextRowIndex, isWhite)
-        
-
-        // If the move puts the player's own king in check, log a message and return
-        if(stillInCheck) {
-            console.log("muie micule");
-            return;
-        }
-        
-        
         
         // Updating the board state and displaying the changes on the board
         updateBoardState(dragged, prevRowIndex, prevColumnIndex, nextRowIndex, nextColumnIndex);  
-        updateBoardDisplay(event, square, dragged)
-        
+        updateBoardDisplay(event, square, dragged);
         
         // Setting and retrieving the king's check status after the move
-        const inCheck = isInCheck(kingColor)
+        const inCheck = isInCheck(kingColor);
         setKingInCheck(inCheck);
         const kingInCheck = getKingInCheck();
         
-        
+    
         // Finding the position of the king and updating its display on the board
         const kingInCheckPosition = findPiecePosition(!isWhite ? Pieces.WHITE_KING : Pieces.BLACK_KING);
         const kingSquareId = columns[kingInCheckPosition.column] + rows[kingInCheckPosition.row];
@@ -69,8 +69,8 @@ const gameControl = function (dragged, square, event) {
             kingSquare.classList.remove("red-square");
         }
         
-     // Changing the player's turn
-     changeTurn();
+        // Changing the player's turn
+        changeTurn();
     }
 } 
 

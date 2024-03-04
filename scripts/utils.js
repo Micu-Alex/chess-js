@@ -107,7 +107,11 @@ export const isInCheck = function (color, customBoard  ) {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const pieceSymbol = boardToSearch[i][j];
-            if (pieceSymbol !== "" && isPieceWhite(pieceSymbol) !== (color === 'white') && isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))) {
+            if (
+                pieceSymbol !== "" &&
+                isPieceWhite(pieceSymbol) !== (color === 'white') &&
+                isValidMove(getPieceType(pieceSymbol), j, kingPosition.column, i, kingPosition.row, isPieceWhite(pieceSymbol))
+                ) {
                 if (customBoard) {
                     console.log("magic board" ,customBoard);
                  } 
@@ -139,13 +143,25 @@ export const changeTurn = function () {
     setIsWhiteTurn(!isWhiteTurn) ; 
 }
 
-// Function to check if the king is in check after a hypothetical move
-export const isInCheckAfterMove = function (dragged, prevCol, nextCol, prevRow, nextRow, isWhite) {   
-    // Make a hypothetical move on a temporary board
-    const tempBoard =  board.map(row => row.slice());
-    tempBoard[nextRow][nextCol] = dragged.innerText;
-    tempBoard[prevRow][prevCol] = "";
-    // Check if the king is in check after the move
-    const kingColor = isWhite ? 'white' : 'black';
-    return isInCheck(kingColor, tempBoard);
-}
+
+export const getAllAvailableMoves = function (pieceType, col, row, isWhite) {
+    const availableMoves = [];
+
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (isValidMove(pieceType, col, j, row, i, isWhite)) {
+                // Make the move on a temporary board
+                const tempBoard = board.map(row => row.slice());
+                tempBoard[i][j] = tempBoard[row][col];
+                tempBoard[row][col] = "";
+
+                // Check if the move results in a valid board state
+                if (!isInCheck(isWhite, tempBoard)) {
+                    availableMoves.push({ col: j, row: i });
+                }
+            }
+        }
+    }
+
+    return availableMoves;
+};
