@@ -143,9 +143,10 @@ export const changeTurn = function () {
     setIsWhiteTurn(!isWhiteTurn) ; 
 }
 
-// Function to get all available moves for a given piece at a specific position
 export const getAllAvailableMoves = function (pieceType, col, row, isWhite) {
     const availableMoves = [];
+    const kingColor = isWhite ? 'white' : 'black';
+    const isKingInCheck = isInCheck(kingColor);
 
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
@@ -156,7 +157,10 @@ export const getAllAvailableMoves = function (pieceType, col, row, isWhite) {
                 tempBoard[row][col] = "";
 
                 // Check if the move results in a valid board state
-                if (!isInCheck(isWhite, tempBoard)) {
+                const stillInCheck = isInCheck(kingColor, tempBoard);
+
+                // If the king is not in check after the move, or the king is not currently in check
+                if ((!stillInCheck && isKingInCheck) || !isKingInCheck) {
                     availableMoves.push({ col: j, row: i });
                 }
             }

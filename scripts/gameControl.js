@@ -39,6 +39,9 @@ const gameControl = function (dragged, square, event) {
     setValidMove(availableMoves.some(move => move.col === nextColumnIndex && move.row === nextRowIndex));
     const validMove = getValidMove();
 
+    const test = Object.entries(Pieces);
+    const firstElements = test.map(arr => arr[0]);
+    console.log(firstElements);
 
     // Retrieving the current player's turn status
     const isWhiteTurn = getIsWhiteTurn();
